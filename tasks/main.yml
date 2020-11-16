@@ -34,6 +34,11 @@
   include: domains.yml
   when: yunohost.extra_domains
 
+- name: Run diagnosis # Required to install certificates
+  shell: yunohost diagnosis run
+  register: diagnosis_out
+  changed_when: "diagnosis_out.stdout.count('Cache still valid') == 0"
+
 - name: Install certificates
   shell: yunohost domain cert-install
   changed_when: False
